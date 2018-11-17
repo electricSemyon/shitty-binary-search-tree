@@ -10,15 +10,17 @@ namespace BinaryTree
     {
         public BSNode<T> Left { get; set; }
         public BSNode<T> Right { get; set; }
-        public int Key { get; }
+        public BSNode<T> Parent { get; set; }
+        public int Key { get; set; }
         public T Data { get; set; }
 
         public delegate void TraverseLambda(int key, T value);
 
-        public BSNode(int key, T data)
+        public BSNode(int key, T data, BSNode<T> parent)
         {
             Data = data;
             Key = key;
+            Parent = parent;
         }
 
         public void Insert(int key, T value)
@@ -31,14 +33,41 @@ namespace BinaryTree
 
             if (key < Key)
             {
-                if (Left == null) Left = new BSNode<T>(key, value);
+                if (Left == null) Left = new BSNode<T>(key, value, this);
                 else Left.Insert(key, value);
             }
             else
             {
-                if (Right == null) Right = new BSNode<T>(key, value);
+                if (Right == null) Right = new BSNode<T>(key, value, this);
                 else Right.Insert(key, value);
             }
+        }
+
+        private void ReplaceNodeInParent(BSNode<T> newValue = null)
+        {
+            if (Parent != null)
+            {
+                if (this == Parent.Left) Parent.Left = newValue;
+                else Parent.Right = newValue;
+            }
+            if (newValue != null) newValue.Parent = Parent;
+        }
+
+        public void Delete(int key)
+        {
+
+            if (key < Key && Left != null) { Left.Delete(key); return; };
+            if (key > Key && Right != null) { Right.Delete(key); return; };
+
+            if (Right != null && Left != null)
+            {
+                BSNode<T> successor = Right.GetMinNode();
+                Key = successor.Key;
+                successor.Delete(successor.Key);
+            }
+            else if (Right == null) ReplaceNodeInParent(Left);
+            else if (Left == null) ReplaceNodeInParent(Right);
+            else ReplaceNodeInParent();
         }
         
         public T Lookup(int key)
@@ -61,6 +90,12 @@ namespace BinaryTree
         {
             if (Left == null) return Key;
             return Left.GetMin();
+        }
+
+        public BSNode<T> GetMinNode()
+        {
+            if (Left == null) return this;
+            return Left.GetMinNode();
         }
 
         public void Traverse(TraverseLambda fn)
@@ -87,7 +122,7 @@ namespace BinaryTree
                 indent += "| ";
             }
 
-            Console.WriteLine($"({ Key }: { Data })");
+            Console.WriteLine(Key);
 
             var children = new List<BSNode<T>>();
 

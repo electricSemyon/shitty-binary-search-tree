@@ -10,19 +10,25 @@ namespace BinaryTree
     {
         static void Main(string[] args)
         {
-            BSTree<string> tree = new BSTree<string>(new BSNode<string>(1, "Test"));
+            BSTree<string> tree = new BSTree<string>(97, "Test");
 
-            tree.Insert(8, "Hello");
-            tree.Insert(4, "World");
-            tree.Insert(10, "Hey");
-            tree.Insert(2, "Dude");
-            tree.Insert(12, "I'm drunk");
+            tree.Insert(10, "Hello");
+            tree.Insert(35, "World");
+            tree.Insert(3, "World");
 
-            tree.Log();
 
             Console.WriteLine($"Element with key = 10 is { tree.Lookup(10) }");
 
             Console.WriteLine($"The smallest key is { tree.GetMinKey() }");
+
+            Console.WriteLine("\nBefore deleting:");
+            tree.Log();
+
+            tree.Delete(10);
+            tree.Delete(3);
+
+            Console.WriteLine("After deleting:");
+            tree.Log();
 
             Console.WriteLine();
 

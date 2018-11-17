@@ -10,14 +10,19 @@ namespace BinaryTree
     {
         public BSNode<T> Root { set; get; }
 
-        public BSTree(BSNode<T> root)
+        public BSTree(int key, T value)
         {
-            Root = root;
+            Root = new BSNode<T>(key, value, null);
         }
 
         public void Insert(int key, T value)
         {
             Root.Insert(key, value);
+        }
+
+        public void Delete(int key)
+        {
+            Root.Delete(key);
         }
 
         public T Lookup(int key)
